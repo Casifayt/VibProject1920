@@ -80,8 +80,9 @@ for i = 1:length(elementsAll)
         pts = [P1;P2];                          
         %plot3(pts(:,1), pts(:,2), pts(:,3)); hold on; grid on;
     end
-    xlabel('[m]');zlabel('[m]'),ylabel('[m]');
 end
+xlabel('[m]');zlabel('[m]'),ylabel('[m]');
+title(['Truss bridge with each beam discretised in '  num2str(N)  ' elements']);
 
 
 

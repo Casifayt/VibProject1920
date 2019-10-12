@@ -37,15 +37,15 @@ for i = 1:N
        nodeInEl(3) = nodeInBeam(3)+(i-1)*lengthEl;
        nodeFinEl(3) = nodeFinEl(3)+i*lengthEl;
     elseif orientation == [0,1,1]   % Beams diagonal up
-       nodeInEl(2) = nodeInBeam(2)+(i-1)*lengthEl*(nodeFinBeam(2)-nodeInBeam(2))/lengthBeam;
-       nodeInEl(3) = nodeInBeam(3)+(i-1)*lengthEl*(nodeFinBeam(3)-nodeInBeam(3))/lengthBeam;
-       nodeFinEl(2) = nodeInBeam(2)+i*lengthEl*(nodeFinBeam(2)-nodeInBeam(2))/lengthBeam;
-       nodeFinEl(3) = nodeInBeam(3)+i*lengthEl*(nodeFinBeam(3)-nodeInBeam(3))/lengthBeam;
+       nodeInEl(2) = nodeInBeam(2)+(i-1)*lengthEl*abs(nodeFinBeam(2)-nodeInBeam(2))/lengthBeam;
+       nodeInEl(3) = nodeInBeam(3)+(i-1)*lengthEl*abs(nodeFinBeam(3)-nodeInBeam(3))/lengthBeam;
+       nodeFinEl(2) = nodeInBeam(2)+i*lengthEl*abs(nodeFinBeam(2)-nodeInBeam(2))/lengthBeam;
+       nodeFinEl(3) = nodeInBeam(3)+i*lengthEl*abs(nodeFinBeam(3)-nodeInBeam(3))/lengthBeam;
     elseif orientation == [0,1,-1]  % Beams diagonal down
-       nodeInEl(2) = nodeInBeam(2)-(i-1)*lengthEl*(nodeFinBeam(2)-nodeInBeam(2))/lengthBeam;
-       nodeInEl(3) = nodeInBeam(3)-(i-1)*lengthEl*(nodeFinBeam(3)-nodeInBeam(3))/lengthBeam;
-       nodeFinEl(2) = nodeInBeam(2)+i*lengthEl*(nodeFinBeam(2)-nodeInBeam(2))/lengthBeam;
-       nodeFinEl(3) = nodeInBeam(3)+i*lengthEl*(nodeFinBeam(3)-nodeInBeam(3))/lengthBeam;
+       nodeInEl(2) = nodeInBeam(2)+(i-1)*lengthEl*abs(nodeFinBeam(2)-nodeInBeam(2))/lengthBeam;
+       nodeInEl(3) = nodeInBeam(3)-(i-1)*lengthEl*abs(nodeFinBeam(3)-nodeInBeam(3))/lengthBeam;
+       nodeFinEl(2) = nodeInBeam(2)+i*lengthEl*abs(nodeFinBeam(2)-nodeInBeam(2))/lengthBeam;
+       nodeFinEl(3) = nodeInBeam(3)-i*lengthEl*abs(nodeFinBeam(3)-nodeInBeam(3))/lengthBeam;
     end
    fprintf('Element %i of length %f : nodeIn = (%i,%i,%i) and nodeFin = (%i,%i,%i)\n',i,lengthEl, nodeInEl(1),nodeInEl(2),nodeInEl(3),nodeFinEl(1),nodeFinEl(2),nodeFinEl(3));
    elements{i} = {nodeInEl,nodeFinEl,lengthEl,orientation};
