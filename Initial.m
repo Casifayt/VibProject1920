@@ -42,7 +42,19 @@ betaDeg = betaRad*180/pi;
 % Second moments of inertia
 Isq3 = sq3^4/12; Isq4 = sq4^4/12; Isq5 = sq5^4/12;
 
-Alexandre
+beams = beams_initialisation();
+
+for i = 1:length(beams)
+    P1 = transpose(beams{1,i}{1,1});        % because coordinates are stored in array and not matrix
+    P2 = transpose(beams{1,i}{1,2});        % and plot3 needs matrix
+    
+    plot3(P1(1),P1(2),P1(3),'o');
+    plot3(P2(1),P2(2),P2(3),'o');
+    
+    pts = [P1;P2];                          
+    plot3(pts(:,1), pts(:,2), pts(:,3)); hold on; grid on;
+    xlabel('[m]');zlabel('[m]'),ylabel('[m]');
+end
 
 
 

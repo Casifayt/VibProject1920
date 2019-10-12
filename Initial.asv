@@ -42,6 +42,25 @@ betaDeg = betaRad*180/pi;
 % Second moments of inertia
 Isq3 = sq3^4/12; Isq4 = sq4^4/12; Isq5 = sq5^4/12;
 
+beams = beams_initialisation();
+
+%plot3(beams{1,1}{1,1}(1),beams{1,1}{1,1}(2),beams{1,1}{1,1}(3),'o'); hold on; grid on;
+%plot3(beams{1,1}{1,2}(1),beams{1,1}{1,2}(2),beams{1,1}{1,2}(3),'o');
+
+for i = 2:length(beams)
+    %fprintf('Beams %i nodeIn = (%i,%i,%i) nodeFin = (%i,%i,%i)\n',i,beams{1,i}{1,1}(1),beams{1,i}{1,1}(2),beams{1,i}{1,1}(3), beams{1,i}{1,2}(1),beams{1,i}{1,2}(2),beams{1,i}{1,2}(3));
+    %plot3(beams{1,i}{1,1}(1),beams{1,i}{1,1}(2),beams{1,i}{1,1}(3),'o');
+    %plot3(beams{1,i}{1,2}(1),beams{1,i}{1,2}(2),beams{1,i}{1,2}(3),'o');
+end
+for i = 1:length(beams)
+    x1 = beams{1,i}{1,1}(1); x2 = beams{1,i}{1,2}(1);
+    y1 = beams{1,i}{1,1}(2); y2 = beams{1,i}{1,2}(2);
+    z1 = beams{1,i}{1,1}(3); z2 = beams{1,i}{1,2}(3);
+    %line([x1,y1,z1],[x2,y2,z2]);
+end
+
+line([x1,y1,z1],[x2,y2,z2]);
+
 
 
 
