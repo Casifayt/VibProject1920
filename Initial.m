@@ -64,7 +64,7 @@ N = 10;
 
 for i = 1:length(beams)
     fprintf('\nDiscretisation of beam number %i into %i elements\n',i,N);
-    elements = discretisation(beams{1,i},N,i);
+    elements = discretisation(beams{1,i},N);
     elementsAll{i,1}=elements;
 end
 

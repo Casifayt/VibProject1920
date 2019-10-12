@@ -7,7 +7,7 @@
 %   - Final node
 %   - Length
 
-function [elements] = discretisation(beams,N,beam_number)
+function [elements] = discretisation(beams,N)
 % INPUTS
 %  - beam is the beam element to be discretised in the form of a cell array
 %  - N is the number of elements in which the beam will be discretised
@@ -50,6 +50,4 @@ for i = 1:N
    fprintf('Element %i of length %f : nodeIn = (%i,%i,%i) and nodeFin = (%i,%i,%i)\n',i,lengthEl, nodeInEl(1),nodeInEl(2),nodeInEl(3),nodeFinEl(1),nodeFinEl(2),nodeFinEl(3));
    elements{i} = {nodeInEl,nodeFinEl,lengthEl,orientation};
 end
-
-
 end
