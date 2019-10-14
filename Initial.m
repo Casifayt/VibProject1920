@@ -43,8 +43,10 @@ betaDeg = betaRad*180/pi;
 Isq3 = sq3^4/12; Isq4 = sq4^4/12; Isq5 = sq5^4/12;
 
 
-%% Initiliasition of the beams
-beams = beams_initialisation();
+%% Initialisation of the beams
+fprintf('\nInitialisation of the beams\n');
+beams = beams_initialisation(0);
+fprintf('\nBeams initialised\n');
 
 %% Plot of the truss bridge
 for i = 1:length(beams)
@@ -60,19 +62,19 @@ for i = 1:length(beams)
 end
 
 %% Discretisation of the beams
-N = 10;
-
+N = 5;
+fprintf('\nDiscretisation of the beams into %i elements\n',N);
 for i = 1:length(beams)
-    fprintf('\nDiscretisation of beam number %i into %i elements\n',i,N);
-    elements = discretisation(beams{1,i},N);
+    elements = discretisation(beams{1,i},N,i,0);
     elementsAll{i,1}=elements;
 end
+fprintf('\nBeams discretised\n');
 
 %% Plot of the discretised elements
 for i = 1:length(elementsAll)
     for j = 1:length(elementsAll{1,1})
         P1 = elementsAll{i,1}{1,j}{1,1};        
-        P1 = elementsAll{i,1}{1,j}{1,2};
+        P2 = elementsAll{i,1}{1,j}{1,2};
 
         plot3(P1(1),P1(2),P1(3),'o');
         plot3(P2(1),P2(2),P2(3),'o');
