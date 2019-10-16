@@ -7,9 +7,9 @@
 %   - Final node
 %   - Length
 
-function [elements] = discretisation(beams,N,beam_nbr,print)
+function [elements] = discretisation(beam,N,beam_nbr,print)
 % INPUTS
-%  - beam is the beam element to be discretised in the form of a cell array
+%  - beam is the beam element to be discretised in the form of a structure
 %  - N is the number of elements in which the beam will be discretised
 %  - beam_nbr is the number of the beam being discretised
 %  - print is a str value to choose if the function will print its
@@ -19,10 +19,10 @@ function [elements] = discretisation(beams,N,beam_nbr,print)
 %  - elements is a cell array containing details about the elements of the
 %  beam being discretised
 
-nodeInBeam = beams{1,1};        % Extracting initial node from beam
-nodeFinBeam = beams{1,2};       % Extracting final node from beam
-lengthBeam = beams{1,3};        % Extracting beam length
-orientation = beams{1,4};       % Extracting beam orientation
+nodeInBeam = beam.node_Initial;        % Extracting initial node from beam
+nodeFinBeam = beam.node_Final;       % Extracting final node from beam
+lengthBeam = beam.Length;        % Extracting beam length
+orientation = beam.Orientation;       % Extracting beam orientation
 
 lengthEl = lengthBeam/N;
 if print == 1
@@ -55,6 +55,7 @@ for i = 1:N
     if print == 1
         fprintf('Element %i of length %f : nodeIn = (%i,%i,%i) and nodeFin = (%i,%i,%i)\n',i,lengthEl, nodeInEl(1),nodeInEl(2),nodeInEl(3),nodeFinEl(1),nodeFinEl(2),nodeFinEl(3));
     end
-    elements{i} = {nodeInEl,nodeFinEl,lengthEl,orientation};
+    current_element = struct('node_Initial',nodeInEl, 'node_Final', nodeFinEl,'Length',lengthEl,'Orientation',orientation);
+    elements.(['Element' num2str(i)]) = current_element;
 end
 end

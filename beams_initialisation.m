@@ -40,7 +40,10 @@ for i = 0:4
        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',(1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
    end
    orientation = [1,0,0];
-   beams{beams_made+(i+1)}={nodeIn,nodeFin,length,orientation,};
+   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+   str = ['Beam' num2str(beams_made+(i+1))];
+   beams.(str)=current_beam;
+   %beams{beams_made+(i+1)}={nodeIn,nodeFin,length,orientation,};
    nbr_beams_this_case = nbr_beams_this_case + 1;
 end
 beams_made = beams_made + nbr_beams_this_case;
@@ -67,7 +70,10 @@ for i = 0:7
        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',(1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
    end
    orientation = [0,1,0];
-   beams{beams_made+(1+i)} = {nodeIn,nodeFin,length,orientation};
+   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+   str = ['Beam' num2str(beams_made+(i+1))];
+   beams.(str)=current_beam;
+   %beams{beams_made+(1+i)} = {nodeIn,nodeFin,length,orientation};
    nbr_beams_this_case = nbr_beams_this_case + 1;
 end
 beams_made = beams_made + nbr_beams_this_case;
@@ -91,7 +97,10 @@ for i = 1:3
        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
    end
    orientation = [1,0,0];
-   beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
+   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+   str = ['Beam' num2str(beams_made+i)];
+   beams.(str)=current_beam;
+   %beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
    nbr_beams_this_case = nbr_beams_this_case + 1;
 end
 beams_made = beams_made + nbr_beams_this_case;
@@ -116,7 +125,10 @@ for i = 1:4
        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
    end
    orientation = [0,1,0];
-   beams{i+beams_made} = {nodeIn,nodeFin,length,orientation};
+   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+   str = ['Beam' num2str(beams_made+i)];
+   beams.(str)=current_beam;
+   %beams{i+beams_made} = {nodeIn,nodeFin,length,orientation};
    nbr_beams_this_case = nbr_beams_this_case + 1;
 end
 beams_made = beams_made + nbr_beams_this_case;
@@ -139,7 +151,10 @@ for i = 1:3
         fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
     end
     orientation = [0,0,1];
-    beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
+    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+    str = ['Beam' num2str(beams_made+i)];
+    beams.(str)=current_beam;
+    %beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
     nbr_beams_this_case = nbr_beams_this_case + 1;
 end
 beams_made = beams_made + nbr_beams_this_case;
@@ -169,7 +184,10 @@ for i = 0:3
     if print == 1
         fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',(1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
     end
-    beams{(1+i)+beams_made}={nodeIn,nodeFin,length,orientation};
+    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+    str = ['Beam' num2str(beams_made+(i+1))];
+    beams.(str)=current_beam;
+    %beams{(1+i)+beams_made}={nodeIn,nodeFin,length,orientation};
     nbr_beams_this_case = nbr_beams_this_case + 1;
 end
 beams_made = beams_made + nbr_beams_this_case;
@@ -192,7 +210,10 @@ for i = 1:3
         fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
     end
     orientation = [0,0,1];
-    beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
+    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+    str = ['Beam' num2str(beams_made+i)];
+    beams.(str)=current_beam;
+    %beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
     nbr_beams_this_case = nbr_beams_this_case + 1;
 end
 beams_made = beams_made + nbr_beams_this_case;
@@ -222,7 +243,10 @@ for i = 0:3
     if print == 1
         fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',(1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
     end
-    beams{(1+i)+beams_made}={nodeIn,nodeFin,length,orientation};
+    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+    str = ['Beam' num2str(beams_made+(i+1))];
+    beams.(str)=current_beam;
+    %beams{(1+i)+beams_made}={nodeIn,nodeFin,length,orientation};
     nbr_beams_this_case = nbr_beams_this_case + 1;
 end
 beams_made = beams_made + nbr_beams_this_case;

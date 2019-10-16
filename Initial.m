@@ -6,7 +6,7 @@
 % ULiege - Aerospatial Engineering
 
 clear all;
-format long;
+format short;
 
 %% Material properties
 % Steel beams
@@ -15,66 +15,45 @@ E = 210e9;              % [Pa] Young's Modulus
 nu = .3;                % [1] Poissons's ratio
 rho = 7.8*1e3;          % [kg.m^-3] Material density (steel, reference book p.390) 
 
-%% Geometrial properties of the beams
-% Lengths
-sq3 = 3;                % [m] Square beams may be or 3 meters
-sq4 = 4;                % [m] or 4 meters
-sq5 = 5;                % [m] or 5 meters.
-diagL = sqrt(sq5^2 + sq3^2); % [m] Diagonal beams length
-
-% Diagonal beams are of rectangular section with 80 mm height x 30 mm width
-
-diagH = 80*1e-3;        % [m] Diagonal beams height (rectangular section)
-diagW = 30*1e-3;        % [m] Diagonal beams width (rectangular section)
-areaDiag = diagH*diagW; % [m^2] Area of the rectangular beams
-
-% Other beams are of square section of 70 mm edge
-squareH = 70*1e-3;      % [m] Other beams edge (square section)
-areaSquare = squareH^2; % [m^2] Area of the square beams
-
-
-% Angle between beams
-alphaRad = atan(3/5);   % [rad] Angle between horizontal and diagonal beams
-alphaDeg = alphaRad*180/pi;
-betaRad = atan(5/3);    % [rad] Angle between vertical and diagonal beams
-betaDeg = betaRad*180/pi;
-
-% Second moments of inertia
-Isq3 = sq3^4/12; Isq4 = sq4^4/12; Isq5 = sq5^4/12;
-
 
 %% Initialisation of the beams
 fprintf('\nInitialisation of the beams\n');
-beams = beams_initialisation(0);
+beams_All = beams_initialisation(0);
 fprintf('\nBeams initialised\n');
 
 %% Plot of the truss bridge
-for i = 1:length(beams)
-    P1 = beams{1,i}{1,1};        
-    P2 = beams{1,i}{1,2};        
+for i = 1:numel(fieldnames(beams_All))
+    beam = beams_All.(['Beam' num2str(i)]);
+    P1 = beam.node_Initial;
+    P2 = beam.node_Final;
     
     plot3(P1(1),P1(2),P1(3),'o');
     plot3(P2(1),P2(2),P2(3),'o');
     
     pts = [P1;P2];                          
     plot3(pts(:,1), pts(:,2), pts(:,3)); hold on; grid on;
-    xlabel('[m]');zlabel('[m]'),ylabel('[m]');
 end
+xlabel('x [m]');zlabel('z [m]'),ylabel('y [m]');
+clear beam;
 
 %% Discretisation of the beams
-N = 5;
+N = 10;
 fprintf('\nDiscretisation of the beams into %i elements\n',N);
-for i = 1:length(beams)
-    elements = discretisation(beams{1,i},N,i,0);
-    elementsAll{i,1}=elements;
+for i = 1:numel(fieldnames(beams_All))
+    beam = beams_All.(['Beam' num2str(i)]);
+    elements = discretisation(beam,N,i,0);
+    elements_All.(['Beam' num2str(i) '_elements'])=elements;
 end
 fprintf('\nBeams discretised\n');
 
-%% Plot of the discretised elements
-for i = 1:length(elementsAll)
-    for j = 1:length(elementsAll{1,1})
-        P1 = elementsAll{i,1}{1,j}{1,1};        
-        P2 = elementsAll{i,1}{1,j}{1,2};
+
+%% Plot of the nodes of the discretised elements
+for i = 1:numel(fieldnames(elements_All))
+    current_beam = elements_All.(['Beam' num2str(i) '_elements']);
+    for j = 1:numel(fieldnames(current_beam))
+        current_element = current_beam.(['Element' num2str(j)]);
+        P1 = current_element.node_Initial;
+        P2 = current_element.node_Final;
 
         plot3(P1(1),P1(2),P1(3),'o');
         plot3(P2(1),P2(2),P2(3),'o');
@@ -83,8 +62,8 @@ for i = 1:length(elementsAll)
         %plot3(pts(:,1), pts(:,2), pts(:,3)); hold on; grid on;
     end
 end
-xlabel('[m]');zlabel('[m]'),ylabel('[m]');
 title(['Truss bridge with each beam discretised in '  num2str(N)  ' elements']);
 
-
-
+%% Cleansing of the useless variables left
+var_2_clean = {'current_beam', 'current_element', 'i', 'j','N','beam', 'P1', 'P2', 'pts', 'var_2_clean'};
+clear (var_2_clean{:});
