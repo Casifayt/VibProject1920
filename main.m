@@ -11,59 +11,56 @@ format short;
 %% Material properties
 % Steel beams
 
-E = 210e9;              % [Pa] Young's Modulus 
-nu = .3;                % [1] Poissons's ratio
-rho = 7.8*1e3;          % [kg.m^-3] Material density (steel, reference book p.390) 
+E = 210e9;              % Young's Modulus       [Pa] 
+nu = .3;                % Poissons's ratio      [/]
+G = .5*E/(1+2*nu);      % Shear modulus         [Pa]  
+rho = 7.8*1e3;          % Material density      [kg.m^-3] 
+% Density for steel extracted from reference book p.390
 
 
 %% Initialisation of the beams
 fprintf('\nInitialisation of the beams\n');
-beams_All = beams_initialisation(0);
+print = 0;              % If 1, prints details beams_initialisation
+                        % no print if 0
+beams_All = beams_initialisation(print);
 fprintf('\nBeams initialised\n');
 
-%% Plot of the truss bridge
-for i = 1:numel(fieldnames(beams_All))
-    beam = beams_All.(['Beam' num2str(i)]);
-    P1 = beam.node_Initial;
-    P2 = beam.node_Final;
-    
-    plot3(P1(1),P1(2),P1(3),'o');
-    plot3(P2(1),P2(2),P2(3),'o');
-    
-    pts = [P1;P2];                          
-    plot3(pts(:,1), pts(:,2), pts(:,3)); hold on; grid on;
-end
-xlabel('x [m]');zlabel('z [m]'),ylabel('y [m]');
-clear beam;
-
 %% Discretisation of the beams
-N = 10;
-fprintf('\nDiscretisation of the beams into %i elements\n',N);
+N_elem = 10;         % Number of elements per beam
+fprintf('\nDiscretisation of the beams into %i elements\n',N_elem);
 for i = 1:numel(fieldnames(beams_All))
     beam = beams_All.(['Beam' num2str(i)]);
-    elements = discretisation(beam,N,i,0);
+    elements = discretisation(beam,N_elem,i,0);
     elements_All.(['Beam' num2str(i) '_elements'])=elements;
 end
 fprintf('\nBeams discretised\n');
 
 
-%% Plot of the nodes of the discretised elements
-for i = 1:numel(fieldnames(elements_All))
-    current_beam = elements_All.(['Beam' num2str(i) '_elements']);
-    for j = 1:numel(fieldnames(current_beam))
-        current_element = current_beam.(['Element' num2str(j)]);
-        P1 = current_element.node_Initial;
-        P2 = current_element.node_Final;
+%% Plotting according to user inputs
+plotPerso(beams_All,elements_All);
 
-        plot3(P1(1),P1(2),P1(3),'o');
-        plot3(P2(1),P2(2),P2(3),'o');
-
-        pts = [P1;P2];                          
-        %plot3(pts(:,1), pts(:,2), pts(:,3)); hold on; grid on;
+%% Initialisation of elementary matrices for each element
+for i = 1:numel(fieldnames(elements_All))           % Scanning on each beam
+    current_beam = elements_All.(['Beam' num2str(i) '_elements']);  % Selecting one beam
+    
+    for j = 1:numel(fieldnames(current_beam))       % Scanning on each element of this beam
+        current_element = current_beam.(['Element' num2str(j)]);    % Selecting one element
+        K_el = K_el_init(current_element,E,G);      % Initialising the elementary stiffness matrix
+        M_el = M_el_init(current_element,rho);      % Initialising the elementary mass matrix
     end
 end
-title(['Truss bridge with each beam discretised in '  num2str(N)  ' elements']);
+
+
+
+%% Localisation matrix (L. III sl.17)
+locel = zeros(N_elem,12);
+
+
+
+
 
 %% Cleansing of the useless variables left
-var_2_clean = {'current_beam', 'current_element', 'i', 'j','N','beam', 'P1', 'P2', 'pts', 'var_2_clean'};
+var_2_clean = {'current_beam', 'nodes_beam_plotting','nodes_elements_ploting',...
+    'current_element', 'print','i', 'j','N','beam', 'P1', 'P2', 'pts', ...
+    'elements','var_2_clean'};
 clear (var_2_clean{:});

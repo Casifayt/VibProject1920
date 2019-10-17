@@ -1,26 +1,27 @@
 %% Function initialising all beams elements
-% It gives back a matrix (list of lists) beams which elements are the beams
-% Each beams (row in the matrix) has seven elements :
-%   - Initial node position
-%   - Final node position
-%   - Length [m]
-%   - Orientation (unitary vector)
-%   - Width [mm] (y-dimension)
-%   - Thickness [mm] (x-dimension)
-%   - Area[mm^2]
+% It gives back a structure which fields are the beams
+% Each beam is also a structure, with the following fields :
+%   - Initial node position         (list)[/]
+%   - Final node position           (list)[/]
+%   - Length                        (int)[m]
+%   - Orientation                   (list)[/]
+%   - Height, local z-dimension     (int)[mm]
+%   - Width, x-dimension            (int)[mm]
 
 % The beams and nodes are ranked according to an increasing index of
 % coordinates, taking x_1 = X, x_2 = Y, x_3 = Z
 
 function [beams] = beams_initialisation(print)
-% INPUTS
-%   - print is a binary value to decide if the function prints its
-%   iterations
-% OUTPUTS
-%   - beams is a list containing all beams with their properties
+% INPUT
+%   - print : Binary value to print details or not      (int)[/]
 
-beams_made = 0;                         % Number of beams initialised
-squareSize = 70;                        % size of the square section of beams
+% OUTPUT
+%   - beams : Structure with all the beams              (structure)[/]
+
+beams_made = 0;                 % Number of beams initialised
+square_size = 70;               % Size of the section of not diagonal beams
+rect_height = 80;               % Local z-dimension of the section of diagonal beams
+rect_width = 30;                % x-dimension of the section of diagonal beams
 
 %% Beams in the (x,y,0) plane
 % There are 13 beams in this plane
@@ -37,10 +38,12 @@ for i = 0:4
    nodeIn = [0,5*i,0];
    nodeFin = [4,5*i,0];
    if print == 1
-       fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',(1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
+       fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',...
+           (1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
    end
    orientation = [1,0,0];
-   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin,'Length', ...
+       length, 'Orientation', orientation,'Height',square_size,'Width',square_size);
    str = ['Beam' num2str(beams_made+(i+1))];
    beams.(str)=current_beam;
    %beams{beams_made+(i+1)}={nodeIn,nodeFin,length,orientation,};
@@ -67,10 +70,12 @@ for i = 0:7
        nodeFin = [4,5*(i-4+1),0];
    end
    if print == 1
-       fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',(1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
+       fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',...
+           (1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
    end
    orientation = [0,1,0];
-   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length',...
+       length, 'Orientation', orientation,'Height',square_size,'Width',square_size);
    str = ['Beam' num2str(beams_made+(i+1))];
    beams.(str)=current_beam;
    %beams{beams_made+(1+i)} = {nodeIn,nodeFin,length,orientation};
@@ -94,10 +99,12 @@ for i = 1:3
    nodeIn = [0,5*i,3];
    nodeFin = [4,5*i,3];
    if print == 1
-       fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
+       fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',...
+           i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
    end
    orientation = [1,0,0];
-   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length',...
+       length, 'Orientation', orientation,'Height',square_size,'Width',square_size);
    str = ['Beam' num2str(beams_made+i)];
    beams.(str)=current_beam;
    %beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
@@ -122,10 +129,12 @@ for i = 1:4
        nodeFin = [4,5*((i-3)+2),3];
     end
    if print == 1
-       fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
+       fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',...
+           i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
    end
    orientation = [0,1,0];
-   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+   current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length',...
+       length, 'Orientation', orientation,'Height',square_size,'Width',square_size);
    str = ['Beam' num2str(beams_made+i)];
    beams.(str)=current_beam;
    %beams{i+beams_made} = {nodeIn,nodeFin,length,orientation};
@@ -148,10 +157,12 @@ for i = 1:3
     nodeIn = [0,5*i,0];
     nodeFin = [0,5*i,3];
     if print == 1
-        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
+        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',...
+            i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
     end
     orientation = [0,0,1];
-    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length',...
+        length, 'Orientation', orientation,'Height',square_size,'Width',square_size);
     str = ['Beam' num2str(beams_made+i)];
     beams.(str)=current_beam;
     %beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
@@ -182,9 +193,11 @@ for i = 0:3
        orientation = [0,1,1];
     end
     if print == 1
-        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',(1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
+        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',...
+            (1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
     end
-    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', ...
+        length, 'Orientation', orientation,'Height',rect_height,'Width',rect_width);
     str = ['Beam' num2str(beams_made+(i+1))];
     beams.(str)=current_beam;
     %beams{(1+i)+beams_made}={nodeIn,nodeFin,length,orientation};
@@ -207,10 +220,12 @@ for i = 1:3
     nodeIn = [4,5*i,0];
     nodeFin = [4,5*i,3];
     if print == 1
-        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
+        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',...
+            i+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
     end
     orientation = [0,0,1];
-    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', ...
+        length, 'Orientation', orientation,'Height',square_size,'Width',square_size);
     str = ['Beam' num2str(beams_made+i)];
     beams.(str)=current_beam;
     %beams{i+beams_made}={nodeIn,nodeFin,length,orientation};
@@ -241,9 +256,11 @@ for i = 0:3
        orientation = [0,1,1];
     end
     if print == 1
-        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',(1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
+        fprintf('Beams %i with initial node (%i,%i,%i) and final node (%i,%i,%i)\n',...
+            (1+i)+beams_made,nodeIn(1),nodeIn(2),nodeIn(3),nodeFin(1),nodeFin(2),nodeFin(3));
     end
-    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', length, 'Orientation', orientation);
+    current_beam = struct('node_Initial', nodeIn, 'node_Final', nodeFin, 'Length', ...
+        length, 'Orientation', orientation,'Height',rect_height,'Width',rect_width);
     str = ['Beam' num2str(beams_made+(i+1))];
     beams.(str)=current_beam;
     %beams{(1+i)+beams_made}={nodeIn,nodeFin,length,orientation};
