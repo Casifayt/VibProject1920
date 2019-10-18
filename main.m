@@ -17,6 +17,9 @@ G = .5*E/(1+2*nu);      % Shear modulus         [Pa]
 rho = 7.8*1e3;          % Material density      [kg.m^-3] 
 % Density for steel extracted from reference book p.390
 
+mat_prop = struct('E',E,'nu',nu,'rho',rho,'G',G);
+% All material properties stored in a structure with corresponding fields
+
 
 %% Initialisation of the beams
 fprintf('\nInitialisation of the beams\n');
@@ -45,8 +48,8 @@ for i = 1:numel(fieldnames(elements_All))           % Scanning on each beam
     
     for j = 1:numel(fieldnames(current_beam))       % Scanning on each element of this beam
         current_element = current_beam.(['Element' num2str(j)]);    % Selecting one element
-        K_el = K_el_init(current_element,E,G);      % Initialising the elementary stiffness matrix
-        M_el = M_el_init(current_element,rho);      % Initialising the elementary mass matrix
+        K_el = K_el_init(current_element,mat_prop);      % Initialising the elementary stiffness matrix
+        M_el = M_el_init(current_element,mat_prop);      % Initialising the elementary mass matrix
     end
 end
 

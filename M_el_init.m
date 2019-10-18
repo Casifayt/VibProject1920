@@ -2,7 +2,7 @@
 % This function initialises the elementary mass matrix by taking
 % advantage of the fields of the structure element given
 
-function [M] = M_el_init(element,rho)
+function [M] = M_el_init(element,mat_prop)
 % INPUTS
 %   - element   : element to extract the matrix from        (structure)
 %   - rho       : Material density                          (int)[kg.m^-3]
@@ -11,18 +11,21 @@ function [M] = M_el_init(element,rho)
 %   - M         : Elementary mass matrix of the element (cell array)
 
 %% Extraction of the element properties
-l = element.Length;         % Extracting element length (l)
-h = element.Height;         % Extracting element height (mm)
-b = element.Width;          % Extracting element width (mm)
-A = h*b;                    % Computing cross section are (mm^2)
+l = element.Length;         % Length                        (int)[m]
+h = element.Height;         % Height                        (int)[mm]
+b = element.Width;          % Width                         (int)[mm]
+A = h*b*1e-6;               % Computing cross section area  (float)[m^2]
+
+%% Extraction of the material properties
+rho = mat_prop.rho;         % Density                       (int)[kg.m^-3]
 
 %% Computation of the element properties needed
 if h==b     
     % SQUARE BEAMS
-    r = h/sqrt(12)*1e3;     % Computing radius of gyration (m)
+    r = h/sqrt(12)*1e3;     % Computing radius of gyration  (float)[m]
 else        
     % RECTANGULAR BEAM
-    r = h/sqrt(12)*1e3;     % Computing radius of gyration (m)
+    r = h/sqrt(12)*1e3;     % Computing radius of gyration  (float)[m]
     %% A VOIR PARCE QUE NORMALEMENT RADIUS OF GYRATION DEPENDS ON AXIS...
 end
 

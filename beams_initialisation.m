@@ -1,5 +1,5 @@
 %% Function initialising all beams elements
-% It gives back a structure which fields are the beams
+% It gives back a structure which fields are all the beams
 % Each beam is also a structure, with the following fields :
 %   - Initial node position         (list)[/]
 %   - Final node position           (list)[/]
@@ -18,10 +18,10 @@ function [beams] = beams_initialisation(print)
 % OUTPUT
 %   - beams : Structure with all the beams              (structure)[/]
 
-beams_made = 0;                 % Number of beams initialised
-square_size = 70;               % Size of the section of not diagonal beams
-rect_height = 80;               % Local z-dimension of the section of diagonal beams
-rect_width = 30;                % x-dimension of the section of diagonal beams
+beams_made = 0;     % Number of beams initialised                           (int)[/]
+square_size = 70;   % Side of the section of square beams                   (int)[mm]
+rect_height = 80;   % Local z dimension of the section of diagonal beams    (int)[mm]
+rect_width = 30;    % x-dimension of the section of diagonal beams          (int)[mm]
 
 %% Beams in the (x,y,0) plane
 % There are 13 beams in this plane

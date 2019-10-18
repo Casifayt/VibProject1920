@@ -6,7 +6,7 @@ function [elements] = discretisation(beam,N,beam_nbr,print)
 % INPUTS
 %  - beam       : Beam being discretised                    (structure)[/]
 %  - N          : Total number of elements wanted           (int)[/]
-%  - beam_nbr   : Index of the beam                         (int)[/]
+%  - beam_nbr   : Index of the beam (for the prints)        (int)[/]
 %  - print      : Binary value to print details or not      (int)[/]
 
 
@@ -14,15 +14,16 @@ function [elements] = discretisation(beam,N,beam_nbr,print)
 %  - elements   : All the discretised elements of the beam  (structure)[/]
 
 %% Extraction of the beam properties
-nodeInBeam = beam.node_Initial;     % Extracting initial node from beam
-nodeFinBeam = beam.node_Final;      % Extracting final node from beam
-lengthBeam = beam.Length;           % Extracting beam length
-orientation = beam.Orientation;     % Extracting beam orientation
-height = beam.Height;               % Extracting beam height (local dimension)
-width = beam.Width;                 % Extracting beam width 
+nodeInBeam = beam.node_Initial;     % Initial node
+nodeFinBeam = beam.node_Final;      % Final node
+lengthBeam = beam.Length;           % Length
+orientation = beam.Orientation;     % Orientation
+height = beam.Height;               % Height
+width = beam.Width;                 % Width 
 
 
-lengthEl = lengthBeam/N;
+lengthEl = lengthBeam/N;            % Elements length       (float)[m]
+
 if print == 1
     fprintf('\nDiscretisation of beam number %i into %i elements\n',beam_nbr,N);
 end

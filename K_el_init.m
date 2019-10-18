@@ -2,7 +2,7 @@
 % This function initialises the stiffness mass matrix by taking
 % advantage of the fields of the structure element given
 
-function [K] = K_el_init(element,E,G)
+function [K] = K_el_init(element,mat_prop)
 % INPUTS
 %   - element   : element to extract the matrix from        (structure)
 %   - E         : Young's modulus                           (int)[Pa]
@@ -12,33 +12,37 @@ function [K] = K_el_init(element,E,G)
 %   - K         : Elementary stiffness matrix of the element (cell array)
 
 %% Extraction of the element properties
-l = element.Length;         % Length (l)
-h = element.Height;         % Height (mm)
-b = element.Width;          % Width (mm)
+l = element.Length;         % Length                                    (int)[m]
+h = element.Height;         % Height                                    (int)[mm]
+b = element.Width;          % Width                                     (int)[mm]
+
+%% Extraction of the material properties
+E = mat_prop.E;             % Young's modulus                           (int)[Pa]
+G = mat_prop.G;             % Shear modulus                             (float)[Pa]
 
 %% Computation of the element properties needed
-A = h*b;                    % Computing cross section are (mm^2)
+A = h*b*1e-4;               % Computing cross section are               (float)[m^2]
 
 if h==b     
     % SQUARE BEAMS
-    J = 9*h^4/64;           % Torsional constant for square section (mm^4)
-    Iy = h^4/12;            % Second moment of area about local axis y (mm^4)
-    Iz = Iy;                % Second moment of area about local axis z (mm^4)
+    J = 9*h^4/64*1e-12;     % Torsional constant for square section     (float)[m^4]
+    Iy = h^4/12*1e-12;      % Second moment of area about local axis y  (float)[m^4]
+    Iz = Iy;                % Second moment of area about local axis z  (float)[m^4]
 else        
     % RECTANGULAR BEAM
  
-    % Torsional constant for rectangular section (mm^4)
+    % Torsional constant for rectangular section                        (float)[m^4]
     % https://en.wikipedia.org/wiki/Torsion_constant
-    J = h*b^3*(1/3 - 0.21*(b/h)*(1-(b^4/12/h^4))); 
+    J = h*b^3*(1/3 - 0.21*(b/h)*(1-(b^4/12/h^4)))*1e-12; 
     
-    Iy = h*b^3/12;          % Second moment of area about local axis y (mm^4)
-    Iz = h^3*b/12;          % Second moment of area about local axis z (mm^4)
+    Iy = h*b^3/12*1e-12;    % Second moment of area about local axis y  (float)[m^4]
+    Iz = h^3*b/12*1e-12;    % Second moment of area about local axis z  (float)[m^4]
 end
 
 %% Initialisation of the elementary stiffness matrix
 
-y = E*Iy*1e-12;             % Rewriting of young's modulus and second moment of area
-z = E*Iz*1e-12;             % to save space and computation factor to N.m^2
+y = E*Iy;             % Product of young's modulus and second
+z = E*Iz;             % moment of area to save space
 
 K = ...
 [
