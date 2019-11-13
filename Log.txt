@@ -1,0 +1,18 @@
+13/11/19: Program launched
+13/11/19: Initialisation of the beams
+13/11/19: Beams initialised in 0.087090 s
+13/11/19: Discretisation into 2 elements
+13/11/19: Beams discretised in 0.043914 s
+13/11/19: Construction of the exhaustive nodes properties list
+13/11/19: Nodes list constructed in 0.024544 s
+13/11/19: Construction of localisation matrix
+13/11/19: Localisation matrix constructed in 0.010553 s
+13/11/19: Construction of rotation matrices
+13/11/19: Rotation matrices constructed in 0.008084 s
+13/11/19: Construction of structural matrices
+13/11/19: Structural matrices constructed in 0.048439 s
+13/11/19: Resolution of the eigenvalue system,frequencies truncated to 8
+13/11/19: Eigenvalue system solved in 0.100437 s
+13/11/19: Construction of the deformed elements,according to mode number 5
+13/11/19: Deformed elements constructed. in 0.028750 s
+13/11/19: \nTotal elapsed time so far : 0.38741s\n
