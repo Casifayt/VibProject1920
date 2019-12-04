@@ -155,6 +155,9 @@ for k = 1:numel(fieldnames(beams_All))
 end
 
 tElapsed = toc(t_discr);
-fprintf('(performed in %.2fs)\n',tElapsed);
-
+if tElapsed > 25e3
+    fprintf('(performed in %.3fs)\n',tElapsed);
+else
+    fprintf('(performed in %.3fms)\n',1000*tElapsed);
+end
 end

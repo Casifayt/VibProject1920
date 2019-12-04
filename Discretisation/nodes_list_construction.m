@@ -22,11 +22,15 @@ unit_vec_x = [1;0;0];       % Unit-vector needed to select elements parallel to 
 nodes_made = 1;             % Index of the number of nodes made so far              (int)[/]
 dofs_made=1;
 
+% Extraction of number of beams
 num_beams = numel(fieldnames(elements_All)); 
+
+% Extraction of number of elements on each beam
 num_el = numel(fieldnames(elements_All.Beam1_elements));
 
-nodes_All = zeros(34*num_el-18,3 + 1 + N_dof);
 % Initialisation of the nodes_All list
+nodes_All = zeros(34*num_el-18,3 + 1 + N_dof);
+
 
 for i = 1: num_beams                % Scanning on each beam
     current_beam = elements_All.(['Beam' num2str(i) '_elements']);  % Selecting one beam

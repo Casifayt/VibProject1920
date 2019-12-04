@@ -6,44 +6,27 @@
 % containg the corresponding rows in the matrix system for the sorted frequencies.
 
 % INPUTS :
-%   - K_S : Structural stiffness matrix                             (matrix)[/]
-%   - M_S : Structural mass matrix                                  (matrix)[/]
-%   - tr  : Number of frequencies desired                           (int)[/]
-%   - plot: Choice of plotting the structure or not                 (int)[/]
+%   - K_red : Reduced stiffness matrix                              (matrix)[/]
+%   - M_red : Reduced mass matrix                                   (matrix)[/]
+%   - tr    : Number of frequencies desired                         (int)[/]
+%   - f_fem : Natural frequencies computed by FEM method            (array)[Hz]
 
-% OUTPUTS :
-%   - fEx   : Sorted exact eigen frequencies                        (array)[Hz]
-%   - f_tr  : Sorted truncated up to the trunc-th one eigen freq    (array)[Hz]
-%   - wEx   : Sorted exact eigen angular frequencies                (array)[rad]
-%   - w_tr  : Sorted truncated up to the trunc-th one eigen ang freq(array)[rad]
-%   - wColInV : Corresponding row of the sorted frequencies in D    (array)[/]
-%   - V     : Full matrix solution of the eigenvalue problem        (matrix)[/]
-%   - D     : Diagonal matrix solution of the eigenvalue problem    (matrix)[/]
-
-function [fEx, f_tr,wEx,w_tr,wColInV,V,D] = eigenSystem(K_S,M_S,tr, plot)
+function eigenSystem_red(K_red, M_red, tr, f_fem)
 
 % Initialisation of the timer
 t_eigen = tic;
 
-w_tr = zeros(1,tr);
-
 % Resolution of the eigenvalue system through MatLab eig function
-if plot == 1
-    [V, D] = eig(K_S, M_S);
-else
-    [V, D] = eigs(K_S,M_S,tr + 1, 'smallestabs');
-end
-
-V = real(V);
+[~, D] = eigs(K_red, M_red,tr+1, 'smallestabs');
 
 % Extraction of exact frequencies in eigenvalues matrix D
-wEx = sqrt(real(diag(D)));  % [rad/s]
+wEx = sqrt((diag(D)));  % [rad/s]
 
 % Sorting of the exact frequencies
 wEx = sort(wEx);
 
-% Initialisation of the exact frequencies produced with Siemens NX
-NX_ex = NX_exact_freq();
+% Initialising exact NX frequencies
+NX = NX_exact_freq();
 
 % Initialisation of counters for the print
 i = 1;
@@ -51,16 +34,25 @@ eig_nbr = 1;
 eig_freq_last = 0;
 sum_err = 0;
 
-fprintf(['\nNatural frequencies of the ' num2str(tr) ' first eigenmodes : \n']);
+% Choose between 
+% f_fem to compare with frequencies from finite element method
+% NX to compare with exact frequencies from NX
+w_compare = f_fem;
+
+fprintf('\nNatural frequencies after model reduction \n');
 while eig_nbr < tr+1 && i < length(wEx)
    eig_freq_cur = wEx(i);
    if eig_freq_cur > eig_freq_last + .00001
-       epsilon = abs(eig_freq_cur/2/pi - NX_ex(eig_nbr))/NX_ex(eig_nbr);
+       epsilon = abs(eig_freq_cur/2/pi - w_compare(eig_nbr))/w_compare(eig_nbr);
        sum_err = sum_err + epsilon;
-       fprintf('%i : \x03C9 = %.3f rad;  f =  %.3f Hz, \x03B5 = %.2f %%\n',...
-          eig_nbr, eig_freq_cur, eig_freq_cur/2/pi,100*epsilon);
+       if 100 * epsilon < .01
+            fprintf('%i : \x03C9 = %.3f rad;  f =  %.3f Hz, \x03B5 = %.2g %%\n',...
+               eig_nbr, eig_freq_cur, eig_freq_cur/2/pi, 100 * epsilon);
+       else
+            fprintf('%i : \x03C9 = %.3f rad;  f =  %.3f Hz, \x03B5 = %.2f %%\n',...
+               eig_nbr, eig_freq_cur, eig_freq_cur/2/pi, 100 * epsilon);
+       end
        eig_freq_last = eig_freq_cur ;
-       w_tr(eig_nbr) = eig_freq_cur;
        eig_nbr = eig_nbr + 1;
    end
    i = i + 1;
@@ -68,28 +60,15 @@ end
 
 tElapsed = toc(t_eigen);
 err_rel_avg = sum_err/tr;
-fprintf('Eigenvalue system solved in %.3fms, avg \x03B5 = %.2f %% \n',...
-    1000 * tElapsed,100*err_rel_avg);
-
-
-fEx = wEx /2/pi;
-f_tr = w_tr/2/pi;   
-
-w_temp = sqrt(diag(D));
-wColInV = zeros(1,length(w_temp));
-
-for i = 1:length(w_temp)
-    for j = 1:length(wEx)
-       if w_temp(i) ==  wEx(j)
-           if wColInV(end,j) == 0
-               wColInV(end,j) = i;
-           else
-               wColInV(end+1,j) = i;
-           end
-       end
-   end
+if 100 * err_rel_avg < 1
+    fprintf('Eigenvalue system solved in %.3fms, avg \x03B5 = %.2g %% \n',...
+        1000 * tElapsed,100 * err_rel_avg);
+else
+    fprintf('Eigenvalue system solved in %.3fms, avg \x03B5 = %.2f %% \n',...
+        1000 * tElapsed,100 * err_rel_avg);
 end
 end
+
 
 function [NX_ex] = NX_exact_freq()
 NX_ex = [
